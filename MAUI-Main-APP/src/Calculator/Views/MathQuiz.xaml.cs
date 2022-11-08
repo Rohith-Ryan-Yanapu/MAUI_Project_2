@@ -1,8 +1,12 @@
+
 namespace Calculator;
 
 public partial class MathQuiz : ContentPage
 {
-	public MathQuiz()
+    int opt1, opt2, opt3;
+
+    Random random = new Random();
+    public MathQuiz()
 	{
 		InitializeComponent();
 	}
@@ -10,6 +14,7 @@ public partial class MathQuiz : ContentPage
     void Started(object sender, EventArgs e)
     {
         visibleGame(1);
+        generateQuestion();
     }
 
     void restart(object sender, EventArgs e)
@@ -17,6 +22,33 @@ public partial class MathQuiz : ContentPage
         visibleGame(0);
     }
 
+    void generateQuestion()
+    {
+        getExpression(); 
+        giveOptions();
+    }
+
+    void getExpression()
+    {
+        int var1,var2;
+        String allExpressions = "+-/*";
+        var1 = random.Next(1, 10);
+        var2 = random.Next(1, 10);
+        this.QuizVar1.Text = var1.ToString();
+        this.QuizVar2.Text = var2.ToString();
+        this.QuizExpression.Text = allExpressions[0].ToString();
+
+    }
+
+    void giveOptions()
+    {
+        this.opt1 = random.Next(1, 20);
+        this.opt2 = random.Next(1, 20);
+        this.opt3 = random.Next(1, 20);
+        this.Option1.Text = opt1.ToString();
+        this.Option2.Text = opt2.ToString();
+        this.Option3.Text = opt3.ToString();
+    }
     void visibleGame(int a)
     {
         if (a == 1)
