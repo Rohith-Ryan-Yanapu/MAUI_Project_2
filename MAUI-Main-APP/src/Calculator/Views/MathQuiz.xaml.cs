@@ -4,7 +4,7 @@ public partial class MathQuiz : ContentPage
 {
     int Score = 0;
     Random random = new Random();
-    int var1, var2, opt1 = 0, opt2 = 0, opt3 = 0, exp = -1;
+    int var1, var2, opt1 = 0, opt2 = 0, opt3 = 0, exp = -1, opt;
     String expression;
     public MathQuiz()
     {
@@ -80,11 +80,87 @@ public partial class MathQuiz : ContentPage
         return var1 + allExpressions[exp].ToString() + var2;
     }
 
+    void checkAnswer1(object sender, EventArgs e)
+    {
+        if (opt == 1)
+        {
+            visibleCorrect(1);
+            visibleOptionsLayout(0);
+            visibleQuestionLayout(0);
+            visibleTryAgain(0);
+            Score++;
+            this.ScoreValue.Text = Score.ToString();
+            this.Skip.Text = "Next";
+        }
+        else
+        {
+            visibleIncorrect(1);
+            visibleOptionsLayout(0);
+            visibleQuestionLayout(0);
+        }
+    }
+    void checkAnswer2(object sender, EventArgs e)
+    {
+        if (opt == 2)
+        {
+            visibleCorrect(1);
+            visibleOptionsLayout(0);
+            visibleQuestionLayout(0);
+            visibleTryAgain(0);
+            Score++;
+            this.ScoreValue.Text = Score.ToString();
+            this.Skip.Text = "Next";
+        }
+        else
+        {
+            visibleIncorrect(1);
+            visibleOptionsLayout(0);
+            visibleQuestionLayout(0);
+        }
+    }
+    void checkAnswer3(object sender, EventArgs e)
+    {
+        if (opt == 3)
+        {
+            visibleCorrect(1);
+            visibleOptionsLayout(0);
+            visibleQuestionLayout(0);
+            visibleTryAgain(0);
+            Score++;
+            this.ScoreValue.Text = Score.ToString();
+            this.Skip.Text = "Next";
+        }
+        else
+        {
+            visibleIncorrect(1);
+            visibleOptionsLayout(0);
+            visibleQuestionLayout(0);
+        }
+    }
     void giveOptions()
     {
         this.opt1 = random.Next(1, 20);
         this.opt2 = random.Next(1, 20);
         this.opt3 = random.Next(1, 20);
+
+        this.opt = random.Next(1, 4);
+        if (this.opt == 1)
+        {
+            this.opt1 = evaluateExpression(expression);
+        }
+        else if (this.opt == 2)
+        {
+            this.opt2 = evaluateExpression(expression);
+        }
+        else
+        {
+            this.opt3 = evaluateExpression(expression);
+        }
+
+        if (opt1 == opt2 || opt3 == opt2 || opt1 == opt3)
+        {
+            giveOptions();
+        }
 
         this.Option1.Text = opt1.ToString();
         this.Option2.Text = opt2.ToString();
@@ -130,6 +206,8 @@ public partial class MathQuiz : ContentPage
             visibleSkip(1);
             visibleStartButton(0);
             visibleTryAgain(1);
+            visibleCorrect(0);
+            visibleIncorrect(0);
         }
         else
         {
@@ -140,6 +218,8 @@ public partial class MathQuiz : ContentPage
             visibleSkip(0);
             visibleStartButton(1);
             visibleTryAgain(0);
+            visibleCorrect(0);
+            visibleIncorrect(0);
         }
 
     }
@@ -220,5 +300,27 @@ public partial class MathQuiz : ContentPage
             this.Skip.IsVisible = false;
         }
     }
-    
+
+    void visibleCorrect(int a)
+    {
+        if (a == 1)
+        {
+            this.CorrectAnswer.IsVisible = true;
+        }
+        else
+        {
+            this.CorrectAnswer.IsVisible = false;
+        }
+    }
+    void visibleIncorrect(int a)
+    {
+        if (a == 1)
+        {
+            this.IncorrectAnswer.IsVisible = true;
+        }
+        else
+        {
+            this.IncorrectAnswer.IsVisible = false;
+        }
+    }
 }
