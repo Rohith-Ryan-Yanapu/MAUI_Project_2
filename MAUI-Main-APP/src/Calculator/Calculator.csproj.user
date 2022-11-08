@@ -6,16 +6,7 @@
     <ActiveDebugProfile>Windows Machine</ActiveDebugProfile>
   </PropertyGroup>
   <ItemGroup>
-    <MauiXaml Update="About.xaml">
-      <SubType>Designer</SubType>
-    </MauiXaml>
-    <MauiXaml Update="AdvanceCalc.xaml">
-      <SubType>Designer</SubType>
-    </MauiXaml>
     <MauiXaml Update="AppShell.xaml">
-      <SubType>Designer</SubType>
-    </MauiXaml>
-    <MauiXaml Update="MathQuiz.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
   </ItemGroup>
