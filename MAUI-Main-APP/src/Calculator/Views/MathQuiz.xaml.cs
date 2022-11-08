@@ -4,11 +4,13 @@ public partial class MathQuiz : ContentPage
 {
     int Score = 0;
     Random random = new Random();
-    int var1, var2, opt1 = 0, opt2 = 0, opt3 = 0, exp = -1, opt;
+    int var1, var2, opt1 = 0, opt2 = 0, opt3 = 0, opt = 0, exp = -1;
+    int totalQuestions;
     String expression;
     public MathQuiz()
     {
         InitializeComponent();
+        totalQuestions = 0;
     }
 
     void Started(object sender, EventArgs e)
@@ -16,11 +18,13 @@ public partial class MathQuiz : ContentPage
         visibleGame(1);
         generateQuestion();
         this.ScoreValue.Text = Score.ToString();
+        this.TotalValue.Text = totalQuestions.ToString();
     }
 
     void restart(object sender, EventArgs e)
     {
         Score = 0;
+        totalQuestions = 0;
         visibleGame(0);
         this.ScoreValue.Text = Score.ToString();
     }
@@ -28,58 +32,35 @@ public partial class MathQuiz : ContentPage
 
     void generateQuestion()
     {
+        ++totalQuestions;
+        this.TotalValue.Text = totalQuestions.ToString();
         expression = getExpression();
         giveOptions();
+        if (totalQuestions == 10)
+        {
+            visibleSkip(0);
+        }
     }
 
     void clickedTryAgain(object sender, EventArgs e)
     {
-        
+        visibleCorrect(0);
+        visibleIncorrect(0);
+        visibleOptionsLayout(1);
+        visibleQuestionLayout(1);
     }
 
     void clickedNext(object sender, EventArgs e)
     {
-        
+        generateQuestion();
+        visibleCorrect(0);
+        visibleIncorrect(0);
+        visibleOptionsLayout(1);
+        visibleQuestionLayout(1);
+        visibleTryAgain(1);
+        this.Skip.Text = "Skip";
 
     }
-    
-    String getExpression()
-    {
-        var1 = 1; var2 = 100;
-        String allExpressions = "+-/*";
-        exp = random.Next(0, 4);
-        if (exp == 2)
-        {
-            while (!(var1 % var2 == 0 && var1 > var2))
-            {
-                var1 = random.Next(1, 10);
-                var2 = random.Next(1, 10);
-            }
-        }
-        else if (exp == 3)
-        {
-            while (!(var1 < 5 && var2 < 5))
-            {
-                var1 = random.Next(1, 10);
-                var2 = random.Next(1, 10);
-            }
-        }
-        else
-        {
-            while (var1 < var2)
-            {
-                var1 = random.Next(1, 10);
-                var2 = random.Next(1, 10);
-            }
-        }
-
-        this.QuizVar1.Text = var1.ToString();
-        this.QuizVar2.Text = var2.ToString();
-        this.QuizExpression.Text = allExpressions[exp].ToString();
-
-        return var1 + allExpressions[exp].ToString() + var2;
-    }
-
     void checkAnswer1(object sender, EventArgs e)
     {
         if (opt == 1)
@@ -137,6 +118,44 @@ public partial class MathQuiz : ContentPage
             visibleQuestionLayout(0);
         }
     }
+
+    String getExpression()
+    {
+        var1 = 1; var2 = 100;
+        String allExpressions = "+-/*";
+        exp = random.Next(0, 4);
+        if (exp == 2)
+        {
+            while (!(var1 % var2 == 0 && var1 > var2))
+            {
+                var1 = random.Next(1, 10);
+                var2 = random.Next(1, 10);
+            }
+        }
+        else if (exp == 3)
+        {
+            while (!(var1 < 5 && var2 < 5))
+            {
+                var1 = random.Next(1, 10);
+                var2 = random.Next(1, 10);
+            }
+        }
+        else
+        {
+            while (var1 < var2)
+            {
+                var1 = random.Next(1, 10);
+                var2 = random.Next(1, 10);
+            }
+        }
+
+        this.QuizVar1.Text = var1.ToString();
+        this.QuizVar2.Text = var2.ToString();
+        this.QuizExpression.Text = allExpressions[exp].ToString();
+
+        return var1 + allExpressions[exp].ToString() + var2;
+    }
+
     void giveOptions()
     {
         this.opt1 = random.Next(1, 20);
@@ -300,7 +319,6 @@ public partial class MathQuiz : ContentPage
             this.Skip.IsVisible = false;
         }
     }
-
     void visibleCorrect(int a)
     {
         if (a == 1)
