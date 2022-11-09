@@ -1,9 +1,7 @@
-using System.Text.Json;
 using Calculator.Models;
 using Calculator.Services;
 namespace Calculator;
 using System.Diagnostics;
-
 
 public partial class MathQuiz : ContentPage
 {
@@ -33,25 +31,29 @@ public partial class MathQuiz : ContentPage
         Score = 0;
         totalQuestions = 0;
         visibleGame(0);
+        visibleTryAgain(0);
         this.ScoreValue.Text = Score.ToString();
     }
 
     void generateQuestion()
     {
+        if (totalQuestions == 10)
+        {
+            visibleSkip(0);
+            visibleRestart(1);
+        }
         giveOptions();
         ++totalQuestions;
         this.TotalValue.Text = totalQuestions.ToString();
 
-        if (totalQuestions == 10)
-        {
-            visibleSkip(0);
-        }
+        
     }
 
     async void getDatafromAPI()
     {
         Debug.WriteLine("In Get Data From API");
         this.quizItems = await _quizService.RefreshDataAsync();
+        Debug.WriteLine(this.quizItems);
         Debug.WriteLine(this.quizItems.Count);
         for (var i = 0; i < quizItems.Count; i++)
         {
@@ -67,82 +69,131 @@ public partial class MathQuiz : ContentPage
         visibleIncorrect(0);
         visibleOptionsLayout(1);
         visibleQuestionLayout(1);
+        visibleTryAgain(0);
     }
 
-    void clickedNext(object sender, EventArgs e)
+    void clickedSkip(object sender, EventArgs e)
     {
-        generateQuestion();
-        visibleCorrect(0);
-        visibleIncorrect(0);
-        visibleOptionsLayout(1);
-        visibleQuestionLayout(1);
-        visibleTryAgain(1);
-        this.Skip.Text = "Skip";
-
+        visibleSkip(0);
+        goToNext();
     }
-    void checkAnswer1(object sender, EventArgs e)
+    public void goToNext()
+    {
+        if(totalQuestions < 10)
+        {
+            generateQuestion();
+            visibleCorrect(0);
+            visibleIncorrect(0);
+            visibleOptionsLayout(1);
+            visibleQuestionLayout(1);
+            visibleTryAgain(0);
+        }
+    }
+    async void checkAnswer1(object sender, EventArgs e)
     {
         var button = (Button)sender;
         var classId = button.ClassId;
         if (this.quizItems[totalQuestions - 1].AnswerIndex == 1)
         {
             visibleCorrect(1);
+            visibleSkip(0);
             visibleOptionsLayout(0);
             visibleQuestionLayout(0);
             visibleTryAgain(0);
             Score++;
             this.ScoreValue.Text = Score.ToString();
-            this.Skip.Text = "Next";
+            await Task.Delay(2000);
+            if (totalQuestions != 10)
+            {
+                goToNext();
+            }
+            else if (totalQuestions == 10)
+            {
+                visibleRestart(1);
+            }
         }
         else
         {
             visibleIncorrect(1);
             visibleOptionsLayout(0);
             visibleQuestionLayout(0);
+            visibleTryAgain(1);
+            if (totalQuestions != 10)
+            {
+                visibleSkip(1);
+            }
         }
     }
 
-    void checkAnswer2(object sender, EventArgs e)
+    async void checkAnswer2(object sender, EventArgs e)
     {
         var button = (Button)sender;
         var classId = button.ClassId;
         if (this.quizItems[totalQuestions - 1].AnswerIndex == 2)
         {
             visibleCorrect(1);
+            visibleSkip(0);
             visibleOptionsLayout(0);
             visibleQuestionLayout(0);
             visibleTryAgain(0);
             Score++;
             this.ScoreValue.Text = Score.ToString();
-            this.Skip.Text = "Next";
+            await Task.Delay(2000);
+            if (totalQuestions != 10)
+            {
+                goToNext();
+            }
+            else if (totalQuestions == 10)
+            {
+                visibleRestart(1);
+            }
         }
         else
         {
             visibleIncorrect(1);
             visibleOptionsLayout(0);
             visibleQuestionLayout(0);
+            visibleTryAgain(1);
+            if (totalQuestions != 10)
+            {
+                visibleSkip(1);
+            }
         }
     }
 
-    void checkAnswer3(object sender, EventArgs e)
+    async void checkAnswer3(object sender, EventArgs e)
     {
         var button = (Button)sender;
         var classId = button.ClassId;
         if (this.quizItems[totalQuestions - 1].AnswerIndex == 3)
         {
             visibleCorrect(1);
+            visibleSkip(0);
             visibleOptionsLayout(0);
             visibleQuestionLayout(0);
             visibleTryAgain(0);
             Score++;
             this.ScoreValue.Text = Score.ToString();
-            this.Skip.Text = "Next";
+            await Task.Delay(2000);
+            if (totalQuestions != 10)
+            {
+                goToNext();
+            }
+            else if (totalQuestions == 10)
+            {
+                visibleRestart(1);
+            }
         }
         else
         {
             visibleIncorrect(1);
             visibleOptionsLayout(0);
             visibleQuestionLayout(0);
+            visibleTryAgain(1);
+            if (totalQuestions != 10)
+            {
+                visibleSkip(1);
+            }
         }
     }
 
@@ -162,11 +213,10 @@ public partial class MathQuiz : ContentPage
         {
             visibleOptionsLayout(1);
             visibleQuestionLayout(1);
-            visibleRestart(1);
             visibleScoreLayout(1);
-            visibleSkip(1);
+            visibleSkip(0);
             visibleStartButton(0);
-            visibleTryAgain(1);
+            visibleTryAgain(0);
             visibleCorrect(0);
             visibleIncorrect(0);
         }
@@ -263,6 +313,9 @@ public partial class MathQuiz : ContentPage
     }
     void visibleCorrect(int a)
     {
+        Debug.WriteLine("Inside Visible Correct");
+        Debug.WriteLine(a);
+
         if (a == 1)
         {
             this.CorrectAnswer.IsVisible = true;

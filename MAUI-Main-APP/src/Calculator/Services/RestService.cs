@@ -29,7 +29,9 @@ namespace Calculator.Services
         {
             Items = new List<QuizItem>();
 
-            Uri uri = new Uri(string.Format("https://localhost:5001/api/todoitems", string.Empty));
+            string localhostUrl = DeviceInfo.Platform == DevicePlatform.Android ? "10.0.2.2" : "localhost";
+
+            Uri uri = new Uri(string.Format($"http://{localhostUrl}:5000/api/todoitems/", string.Empty));
             try
             {
                 HttpResponseMessage response = await _client.GetAsync(uri);
