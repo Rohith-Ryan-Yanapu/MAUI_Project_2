@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Calculator.MathQuiz"
-             Title="MathQuiz">
+             Title="MathQuiz"
+             BackgroundColor="White">
 
     <Grid Padding="16" RowSpacing="2" ColumnSpacing="2"
           RowDefinitions="*,*,*,*,*,*"
@@ -17,13 +18,13 @@
         <Label x:Name="CorrectAnswer" Text="Correct!" TextColor="Green"
                 HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" 
                 IsVisible="false"
-                Grid.Row="2" Grid.Column="2" Grid.RowSpan="2"
+                Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2"
                 FontSize="25"
                 LineBreakMode="NoWrap" MinimumWidthRequest="200" MinimumHeightRequest="50"/>
         <Label x:Name="IncorrectAnswer" Text="Incorrect!" TextColor="Red"
                 HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" 
                 IsVisible="false"
-                Grid.Row="2" Grid.Column="2" Grid.RowSpan="2"
+                Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2"
                 FontSize="25"
                 LineBreakMode="NoWrap" MinimumWidthRequest="200" MinimumHeightRequest="50"/>
         <HorizontalStackLayout 
@@ -44,9 +45,7 @@
             Grid.Row="1"
             IsVisible="false"
             x:Name="QuestionLayout">
-            <Label x:Name="QuizVar1" FontSize="30" LineBreakMode="NoWrap" Text="V1"/>
             <Label x:Name="QuizExpression" FontSize="30" LineBreakMode="NoWrap" Text="E"/>
-            <Label x:Name="QuizVar2" FontSize="30" LineBreakMode="NoWrap" Text="V2"/>
             <Label FontSize="22" LineBreakMode="NoWrap" Text="=?"/>
         </HorizontalStackLayout>
         <VerticalStackLayout 

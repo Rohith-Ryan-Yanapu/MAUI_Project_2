@@ -1,22 +1,29 @@
+using System.Text.Json;
+using Calculator.Models;
+using Calculator.Services;
 namespace Calculator;
+using System.Diagnostics;
+
 
 public partial class MathQuiz : ContentPage
 {
     int Score = 0;
-    Random random = new Random();
-    int var1, var2, opt1 = 0, opt2 = 0, opt3 = 0, opt = 0, exp = -1;
     int totalQuestions;
-    String expression;
+    RestService _quizService;
+    List<QuizItem> quizItems;
+
     public MathQuiz()
     {
+        Debug.WriteLine("In MathQuiz");
+        _quizService = new RestService();
         InitializeComponent();
         totalQuestions = 0;
     }
 
     void Started(object sender, EventArgs e)
     {
+        getDatafromAPI();
         visibleGame(1);
-        generateQuestion();
         this.ScoreValue.Text = Score.ToString();
         this.TotalValue.Text = totalQuestions.ToString();
     }
@@ -29,17 +36,29 @@ public partial class MathQuiz : ContentPage
         this.ScoreValue.Text = Score.ToString();
     }
 
-
     void generateQuestion()
     {
+        giveOptions();
         ++totalQuestions;
         this.TotalValue.Text = totalQuestions.ToString();
-        expression = getExpression();
-        giveOptions();
+
         if (totalQuestions == 10)
         {
             visibleSkip(0);
         }
+    }
+
+    async void getDatafromAPI()
+    {
+        Debug.WriteLine("In Get Data From API");
+        this.quizItems = await _quizService.RefreshDataAsync();
+        Debug.WriteLine(this.quizItems.Count);
+        for (var i = 0; i < quizItems.Count; i++)
+        {
+            Debug.WriteLine("ID is {0}, Expression is {1} and AnswerIndex is {2}", quizItems[i].ID, quizItems[i].Expression, quizItems[i].AnswerIndex);
+
+        }
+        generateQuestion();
     }
 
     void clickedTryAgain(object sender, EventArgs e)
@@ -63,7 +82,9 @@ public partial class MathQuiz : ContentPage
     }
     void checkAnswer1(object sender, EventArgs e)
     {
-        if (opt == 1)
+        var button = (Button)sender;
+        var classId = button.ClassId;
+        if (this.quizItems[totalQuestions - 1].AnswerIndex == 1)
         {
             visibleCorrect(1);
             visibleOptionsLayout(0);
@@ -80,9 +101,12 @@ public partial class MathQuiz : ContentPage
             visibleQuestionLayout(0);
         }
     }
+
     void checkAnswer2(object sender, EventArgs e)
     {
-        if (opt == 2)
+        var button = (Button)sender;
+        var classId = button.ClassId;
+        if (this.quizItems[totalQuestions - 1].AnswerIndex == 2)
         {
             visibleCorrect(1);
             visibleOptionsLayout(0);
@@ -99,9 +123,12 @@ public partial class MathQuiz : ContentPage
             visibleQuestionLayout(0);
         }
     }
+
     void checkAnswer3(object sender, EventArgs e)
     {
-        if (opt == 3)
+        var button = (Button)sender;
+        var classId = button.ClassId;
+        if (this.quizItems[totalQuestions - 1].AnswerIndex == 3)
         {
             visibleCorrect(1);
             visibleOptionsLayout(0);
@@ -117,101 +144,16 @@ public partial class MathQuiz : ContentPage
             visibleOptionsLayout(0);
             visibleQuestionLayout(0);
         }
-    }
-
-    String getExpression()
-    {
-        var1 = 1; var2 = 100;
-        String allExpressions = "+-/*";
-        exp = random.Next(0, 4);
-        if (exp == 2)
-        {
-            while (!(var1 % var2 == 0 && var1 > var2))
-            {
-                var1 = random.Next(1, 10);
-                var2 = random.Next(1, 10);
-            }
-        }
-        else if (exp == 3)
-        {
-            while (!(var1 < 5 && var2 < 5))
-            {
-                var1 = random.Next(1, 10);
-                var2 = random.Next(1, 10);
-            }
-        }
-        else
-        {
-            while (var1 < var2)
-            {
-                var1 = random.Next(1, 10);
-                var2 = random.Next(1, 10);
-            }
-        }
-
-        this.QuizVar1.Text = var1.ToString();
-        this.QuizVar2.Text = var2.ToString();
-        this.QuizExpression.Text = allExpressions[exp].ToString();
-
-        return var1 + allExpressions[exp].ToString() + var2;
     }
 
     void giveOptions()
     {
-        this.opt1 = random.Next(1, 20);
-        this.opt2 = random.Next(1, 20);
-        this.opt3 = random.Next(1, 20);
-
-        this.opt = random.Next(1, 4);
-        if (this.opt == 1)
-        {
-            this.opt1 = evaluateExpression(expression);
-        }
-        else if (this.opt == 2)
-        {
-            this.opt2 = evaluateExpression(expression);
-        }
-        else
-        {
-            this.opt3 = evaluateExpression(expression);
-        }
-
-        if (opt1 == opt2 || opt3 == opt2 || opt1 == opt3)
-        {
-            giveOptions();
-        }
-
-        this.Option1.Text = opt1.ToString();
-        this.Option2.Text = opt2.ToString();
-        this.Option3.Text = opt3.ToString();
+        this.QuizExpression.Text = this.quizItems[totalQuestions].Expression;
+        this.Option1.Text = this.quizItems[totalQuestions].Options[0];
+        this.Option2.Text = this.quizItems[totalQuestions].Options[1];
+        this.Option3.Text = this.quizItems[totalQuestions].Options[2];
         return;
 
-    }
-
-    int evaluateExpression(String str)
-    {
-        int i = 0;
-        if (exp == 0)
-        {
-            i = var1 + var2;
-            return i;
-        }
-        else if (exp == 1)
-        {
-            i = var1 - var2;
-            return i;
-        }
-        else if (exp == 2)
-        {
-            i = var1 / var2;
-            return i;
-        }
-        else if (exp == 3)
-        {
-            i = var1 * var2; ;
-            return i;
-        }
-        return i;
     }
 
     void visibleGame(int a)
