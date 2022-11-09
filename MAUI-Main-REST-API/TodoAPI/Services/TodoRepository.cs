@@ -1,4 +1,5 @@
-﻿using TodoAPI.Interfaces;
+﻿using System.Diagnostics;
+using TodoAPI.Interfaces;
 using TodoAPI.Models;
 
 namespace TodoAPI.Services
@@ -6,9 +7,12 @@ namespace TodoAPI.Services
     public class TodoRepository : ITodoRepository
     {
         private List<TodoItem> _todoList;
+        public GenerateQuestion question;
+        int numberOfQuestions;
 
         public TodoRepository()
         {
+            numberOfQuestions = 10;
             InitializeData();
         }
 
@@ -48,8 +52,23 @@ namespace TodoAPI.Services
         private void InitializeData()
         {
             _todoList = new List<TodoItem>();
-
-            var todoItem1 = new TodoItem
+            string[] V = { "Hi", "Hello" };
+            _todoList = new List<TodoItem>();
+            Debug.WriteLine("Hey");
+            for (int i = 0; i < this.numberOfQuestions; i++)
+            {
+                question = new GenerateQuestion();
+                Debug.WriteLine("Hey");
+                Debug.WriteLine(question.expression);
+                _todoList.Add(new TodoItem
+                {
+                    ID = (i + 1).ToString(),
+                    Expression = question.expression,
+                    Options = { question.opt1.ToString(), question.opt2.ToString(), question.opt3.ToString() },
+                    AnswerIndex = question.opt
+                });
+            }
+            /*var todoItem1 = new TodoItem
             {
                 ID = "1",
                 Expression = "2+3",
@@ -75,7 +94,7 @@ namespace TodoAPI.Services
 
             _todoList.Add(todoItem1);
             _todoList.Add(todoItem2);
-            _todoList.Add(todoItem3);
+            _todoList.Add(todoItem3);*/
         }
     }
 }
